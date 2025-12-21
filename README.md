@@ -25,7 +25,7 @@
 - Türkçe ve İngilizce kaynak desteği
 - Bağlam farkındalığı ile tutarlı yanıtlar
 - Sohbet geçmişi hafızası
-- <img width="2816" height="1536" alt="Gemini_Generated_Image_kfre0gkfre0gkfre" src="https://github.com/user-attachments/assets/5e56de06-0be8-4231-b203-2a2193755739" />
+
 
 
 ### 📄 RAG (Retrieval-Augmented Generation)
