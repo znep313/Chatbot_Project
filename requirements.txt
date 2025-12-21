@@ -1,0 +1,36 @@
+# ===========================================
+# 🧬 Alerji Chatbot - Gerekli Kütüphaneler
+# ===========================================
+# Kurulum: pip install -r requirements.txt
+# ===========================================
+
+# --- TEMEL ---
+python-dotenv==1.0.0
+pandas>=2.0.0
+
+# --- STREAMLIT ---
+streamlit>=1.28.0
+
+# --- LANGCHAIN ---
+langchain>=0.1.0
+langchain-core>=0.1.0
+langchain-community>=0.0.10
+langchain-google-genai>=1.0.0
+langchain-chroma>=0.1.0
+
+# --- VEKTÖR VERİTABANI ---
+chromadb>=0.4.0
+
+# --- PDF İŞLEME ---
+pypdf>=3.0.0
+
+# --- WEB ARAMA ---
+tavily-python>=0.3.0
+
+# --- WEB SCRAPING ---
+beautifulsoup4>=4.12.0
+requests>=2.31.0
+
+# --- GOOGLE AI ---
+google-generativeai>=0.3.0
+

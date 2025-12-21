@@ -1,86 +1,101 @@
 import os
-import sys
 from dotenv import load_dotenv
+from tavily import TavilyClient
+from langchain_chroma import Chroma
+from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 
-# Sadece temel parçaları çağırıyoruz, karmaşık zincirleri değil.
-try:
-    from langchain_chroma import Chroma
-    from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
-except ImportError as e:
-    print(f"❌ Kütüphane eksik: {e}")
-    sys.exit(1)
-
-# 1. Ayarlar
 load_dotenv()
 
-if "GOOGLE_API_KEY" not in os.environ:
-    print("❌ HATA: .env dosyasında GOOGLE_API_KEY bulunamadı.")
-    sys.exit(1)
+# --- AYARLAR ---
+def load_keywords(file_path="keywords.txt"):
+    """Anahtar kelimeleri txt dosyasından yükler."""
+    keywords = []
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                # Boş satırları ve yorum satırlarını atla
+                if line and not line.startswith("#"):
+                    keywords.append(line.lower())
+        print(f"✅ {len(keywords)} anahtar kelime yüklendi.")
+    except FileNotFoundError:
+        print(f"⚠️ {file_path} bulunamadı! Varsayılan kelimeler kullanılıyor.")
+        keywords = ["alerji", "alerjen", "astım", "kaşıntı", "besin", "polen", "ilaç", "test", "sağlık"]
+    return keywords
 
-print("🤖 Alerji Asistanı (Manuel Mod) Başlatılıyor...")
-
-# 2. Modelleri Hazırla
-# Not: Ingestion.py ile aynı embedding modelini kullanmak zorundayız.
+ALLOWED_KEYWORDS = load_keywords()
+chat_history = [] 
+print(os.getenv("GOOGLE_API_KEY"))
+# Modeller
+# Not: Hata alırsan gemini-1.5-flash veya gemini-pro deneyebilirsin
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.1)
 embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
-
-# Beyin (LLM)
-llm = ChatGoogleGenerativeAI(
-    model="gemini-3-flash-preview",
-    temperature=0.3
-)
-
-# 3. Veritabanına Bağlan
-if not os.path.exists("./chroma_db"):
-    print("❌ HATA: 'chroma_db' klasörü yok. Önce veriyi yüklemek için ingestion.py çalıştır.")
-    sys.exit(1)
-
+tavily = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
 db = Chroma(persist_directory="./chroma_db", embedding_function=embeddings)
 
-print("\n✅ SİSTEM HAZIR! (Çıkmak için 'q')\n")
+def get_text_content(ai_message):
+    """Modelden gelen cevabın liste veya string olma durumunu güvenle çözer."""
+    content = ai_message.content
+    if isinstance(content, list):
+        # Liste gelirse ilk elemanın içindeki 'text' anahtarını al
+        return content[0].get('text', '')
+    return str(content)
 
-# --- SOHBET DÖNGÜSÜ ---
+print("✅ SÜPER ASİSTAN ÇEVRİMİÇİ! (Hafıza + Canlı Arama + Filtre) (Çıkmak için 'q' veya 'exit' yazın)")
+
 while True:
-    user_input = input("Siz: ")
-    
-    if user_input.lower() in ['q', 'exit', 'cikis']:
-        print("Görüşmek üzere!")
-        break
-    
-    if not user_input.strip():
+    user_input = input("\nSiz: ")
+    if user_input.lower() in ['q', 'exit']: break
+    if not user_input.strip(): continue
+
+    # --- 1. KATMAN: ANAHTAR KELİME KONTROLÜ ---
+    if not any(word in user_input.lower() for word in ALLOWED_KEYWORDS):
+        print("Bot: Üzgünüm, sadece uzmanlık alanım (Alerji/Sağlık) ile ilgili soruları yanıtlayabilirim. 😊")
         continue
 
-    print("🔎 Bilgi aranıyor ve cevaplanıyor...")
+    # --- 2. KATMAN: KONU ANALİZİ (Gatekeeper) ---
+    check_prompt = f"Bu soru sağlık/alerji ile mi ilgili? EVET veya HAYIR olarak cevap ver. Soru: {user_input}"
+    raw_check = llm.invoke(check_prompt)
+    check_text = get_text_content(raw_check).upper()
+
+    if "EVET" not in check_text:
+        print("Bot: Bu konu uzmanlık alanımın dışında kalıyor. Başka bir sağlık sorunuz var mı?")
+        continue
+
+    print("🔎 Bilgi harmanlanıyor...")
+
+    # --- 3. KATMAN: HAFIZA VE ARAŞTIRMA ---
+    local_docs = db.similarity_search(user_input, k=3)
+    sources = list(set([d.metadata.get("source", "Dosya") for d in local_docs]))
+    local_context = "\n".join([d.page_content for d in local_docs])
 
     try:
-        # ADIM A: RETRIEVAL (Bilgi Getirme)
-        # Zincir yerine veritabanına doğrudan "Bana buna benzer 3 parça getir" diyoruz.
-        relevant_docs = db.similarity_search(user_input, k=3)
-        
-        # Bulunan metinleri tek bir paragraf haline getiriyoruz (Context oluşturma)
-        context_text = "\n\n".join([doc.page_content for doc in relevant_docs])
-        
-        if not context_text:
-            context_text = "Veritabanında ilgili bilgi bulunamadı."
+        # Web aramasını daha spesifik hale getirmek için 'medical' ekliyoruz
+        web_res = tavily.search(query=f"{user_input} medical allergy", search_depth="advanced")
+        web_context = "\n".join([r['content'] for r in web_res['results']])
+    except: 
+        web_context = "Web araması yapılamadı."
 
-        # ADIM B: AUGMENTATION (İstemi Hazırlama)
-        # LLM'e göndereceğimiz mesajı f-string ile elle yazıyoruz.
-        final_prompt = f"""
-        Sen uzman bir alerji asistanısın. Aşağıdaki "BULUNAN BİLGİ" kısmını kullanarak soruyu cevapla.
-        Eğer bilgi metinde yoksa, kendi kafandan uydurma, "Bu konuda bilgim yok" de.
+    # --- 4. KATMAN: CEVAP OLUŞTURMA ---
+    # Geçmişteki son 2 mesajı hafıza olarak veriyoruz
+    final_prompt = f"""
+    Sen uzman bir alerji asistanısın.
+    
+    SOHBET GEÇMİŞİ: {chat_history[-4:]}
+    YEREL KAYNAKLAR: {local_context}
+    WEB BİLGİSİ: {web_context}
+    
+    SORU: {user_input}
+    
+    Talimat: Bilgileri birleştir, tıbbi terimleri açıkla ve dürüst ol. Kaynaklarda yoksa uydurma.
+    """
 
-        SORU: {user_input}
-
-        BULUNAN BİLGİ (CONTEXT):
-        {context_text}
-
-        CEVAP:
-        """
-
-        # ADIM C: GENERATION (Cevap Üretme)
-        # Hazırladığımız metni direkt modele veriyoruz.
-        response = llm.invoke(final_prompt)
-        
-        print(f"Bot: {response.content}\n")
-        
-    except Exception as e:
-        print(f"❌ Bir hata oldu: {e}")
+    final_res = llm.invoke(final_prompt)
+    response_text = get_text_content(final_res)
+    
+    print(f"\nBot: {response_text}")
+    print(f"\n📍 Yararlanılan Kaynaklar: {', '.join(sources)}")
+    
+    # Hafızayı güncelle
+    chat_history.append(f"Kullanıcı: {user_input}")
+    chat_history.append(f"Bot: {response_text}")

@@ -1,0 +1,125 @@
+# Alerji Chatbot - Anahtar Kelimeler
+# Her satıra bir kelime yazın
+# # ile başlayan satırlar yorum satırıdır
+
+# === TEMEL TERİMLER ===
+alerji
+alerjen
+alerjik
+allergy
+allergen
+
+# === BELİRTİLER ===
+kaşıntı
+kızarıklık
+şişlik
+ödem
+döküntü
+ürtiker
+kurdeşen
+hapşırma
+burun akıntısı
+burun tıkanıklığı
+göz yaşarması
+nefes darlığı
+hırıltı
+öksürük
+boğazda şişme
+
+# === CİDDİ REAKSİYONLAR ===
+anafilaksi
+anafilaktik
+şok
+reaksiyon
+
+# === HASTALIKLAR ===
+astım
+egzama
+atopik dermatit
+rinit
+sinüzit
+konjonktivit
+
+# === ALERJİ TÜRLERİ ===
+gıda alerjisi
+besin
+yiyecek
+içecek
+polen
+çiçek tozu
+saman nezlesi
+toz
+akar
+ev tozu
+hayvan
+kedi
+köpek
+tüy
+böcek
+arı
+sokma
+ilaç
+penisilin
+antibiyotik
+lateks
+kauçuk
+
+# === SPESİFİK BESİNLER ===
+süt
+yumurta
+fıstık
+yer fıstığı
+fındık
+ceviz
+badem
+gluten
+buğday
+soya
+balık
+kabuklu deniz
+karides
+midye
+meyve
+elma
+kiraz
+şeftali
+kivi
+muz
+
+# === ÇAPRAZ REAKSİYON ===
+çapraz
+cross
+reaktivite
+
+# === TESTLER VE TEDAVİ ===
+test
+prick
+kan testi
+ige
+tanı
+teşhis
+tedavi
+antihistamin
+epipen
+adrenalin
+kortikosteroid
+aşı
+immünoterapi
+desensitizasyon
+
+# === TIBBİ TERİMLER ===
+bağışıklık
+immün
+histamin
+antikor
+doktor
+uzman
+alerji uzmanı
+immünolog
+
+# === GENEL SAĞLIK ===
+sağlık
+semptom
+belirti
+şikayet
+
