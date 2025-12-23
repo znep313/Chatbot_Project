@@ -26,6 +26,8 @@
 - Bağlam farkındalığı ile tutarlı yanıtlar
 - Sohbet geçmişi hafızası
 
+
+
 ### 📄 RAG (Retrieval-Augmented Generation)
 - ChromaDB vektör veritabanı
 - Akademik makaleleri ve raporları otomatik işleme
