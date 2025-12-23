@@ -71,11 +71,15 @@
 - Google AI API Key
 - Tavily API Key (opsiyonel, web araması için)
 
-### Adım 1: Projeyi İndirin
+### Adım 1: Projeyi İndirin veya Klasöre Gidin
 
 ```bash
+# Eğer Git'ten indiriyorsanız:
 git clone https://github.com/kullanici/alerji-chatbot.git
 cd alerji-chatbot
+
+# Veya mevcut klasöre gidin:
+cd "Chatbot Project"
 ```
 
 ### Adım 2: Sanal Ortam Oluşturun
@@ -128,46 +132,34 @@ Tarayıcınızda `http://localhost:8501` adresine gidin.
 ## Proje Yapısı
 
 ```
-📁 alerji-chatbot/
-│
-├── 📁 app/                      # Uygulama modülleri
-│   ├── __init__.py              # Paket tanımı (v2.0.0)
-│   ├── config.py                # Merkezi konfigürasyon ayarları
-│   └── utils.py                 # Yardımcı fonksiyonlar
+📁 Chatbot Project/
 │
 ├── 📁 data/                     # Veri dosyaları
 │   ├── alerji.csv               # Çapraz reaksiyon veritabanı
-│   └── *.pdf                    # Akademik makaleler
-│
-├── 📁 models/                   # Model yönetimi
-│   ├── __init__.py              # Model exports
-│   └── llm.py                   # LLM ve embedding konfigürasyonu
-│
-├── 📁 scripts/                  # Yardımcı scriptler
-│   └── __init__.py
+│   └── *.pdf                    # Akademik makaleler (PDF dosyaları)
 │
 ├── 📁 chroma_db/                # Vektör veritabanı (otomatik oluşur)
 │
-├── 📄 app.py                    # Ana Streamlit uygulaması
+├── 📄 app.py                    # Ana Streamlit web arayüzü
 ├── 📄 main.py                   # Terminal tabanlı chatbot
 ├── 📄 ingestion.py              # Veri yükleme ve işleme scripti
-├── 📄 keywords.txt              # Anahtar kelime listesi
+├── 📄 keywords.txt              # Anahtar kelime listesi (filtreleme için)
 ├── 📄 requirements.txt          # Python bağımlılıkları
 ├── 📄 .gitignore                # Git ignore kuralları
-├── 📄 .env                      # API anahtarları (gizli)
+├── 📄 .env                      # API anahtarları (gizli - oluşturmanız gerekir)
 └── 📄 README.md                 # Bu dosya
 ```
 
-### Modül Açıklamaları
+### Dosya Açıklamaları
 
-| Modül | Dosya | Açıklama |
-|-------|-------|----------|
-| **app** | `config.py` | API anahtarları, model ayarları, RAG parametreleri |
-| **app** | `utils.py` | `get_text_content()`, `load_keywords()`, `calculate_source_ratio()` |
-| **models** | `llm.py` | `get_models()`, `get_embeddings()`, `get_llm()`, `get_tavily()` |
-| **root** | `app.py` | Streamlit web arayüzü |
-| **root** | `main.py` | Terminal chatbot |
-| **root** | `ingestion.py` | PDF, CSV ve web verilerini ChromaDB'ye yazar |
+| Dosya | Açıklama |
+|-------|----------|
+| `app.py` | Streamlit web arayüzü - Modern UI, dosya yükleme, sohbet, kaynak analizi |
+| `main.py` | Terminal tabanlı chatbot - Komut satırından kullanım |
+| `ingestion.py` | Veri yükleme scripti - PDF, CSV, Excel ve web sitelerini ChromaDB'ye yükler |
+| `keywords.txt` | Anahtar kelime listesi - Chatbot'un hangi konularda yanıt vereceğini belirler |
+| `requirements.txt` | Python paket bağımlılıkları |
+| `.env` | API anahtarları (GOOGLE_API_KEY, TAVILY_API_KEY) |
 
 ---
 
@@ -229,24 +221,9 @@ python ingestion.py
 
 ## Yapılandırma
 
-### Merkezi Konfigürasyon (app/config.py)
-
-```python
-# Model Ayarları
-LLM_MODEL = "gemini-2.5-flash"
-LLM_TEMPERATURE = 0.1
-EMBEDDING_MODEL = "models/text-embedding-004"
-
-# RAG Ayarları
-SIMILARITY_SEARCH_K = 3
-CHUNK_SIZE = 1000
-CHUNK_OVERLAP = 100
-
-# Dosya Ayarları
-MAX_FILE_SIZE_MB = 50
-```
-
 ### Anahtar Kelimeler (keywords.txt)
+
+Chatbot'un hangi konularda yanıt vereceğini belirler. Yeni kelimeler eklemek için dosyayı düzenleyin:
 
 ```txt
 # Yorum satırları # ile başlar
@@ -254,18 +231,34 @@ alerji
 alerjen
 astım
 anafilaksi
+kaşıntı
+besin
+polen
 # Yeni kelime eklemek için satır ekleyin
 ```
 
-### Web Kaynakları (app/config.py)
+### Web Kaynakları (ingestion.py)
+
+Web sitelerini taramak için `ingestion.py` dosyasındaki `URL_LIST` değişkenini düzenleyin:
 
 ```python
 URL_LIST = [
+    "https://www.aid.org.tr/hastaliklar/alerji-ve-bagisiklik-sistemi-hastaliklari/gida-alerjisi/",
+    "https://istanbulalerjimerkezi.com.tr/alerji-nedir-belirtileri-nelerdir/",
     "https://www.aid.org.tr/",
-    "https://alerjiastim.org.tr/",
-    # Daha fazla ekleyin...
+    "https://alerjiastim.org.tr/"
 ]
 ```
+
+### Model Ayarları
+
+Model ayarları kod içinde tanımlıdır:
+- **LLM Model**: `gemini-2.5-flash`
+- **Temperature**: `0.1`
+- **Embedding Model**: `models/text-embedding-004`
+- **Chunk Size**: `1000` karakter
+- **Chunk Overlap**: `100` karakter
+- **Max File Size**: `50 MB`
 
 ---
 
@@ -300,6 +293,7 @@ pip install -r requirements.txt
   - `.venv/` - Sanal ortam
   - `chroma_db/` - Vektör veritabanı
   - `__pycache__/` - Python cache
+  - `*.log` - Log dosyaları
 
 ---
 
@@ -312,7 +306,7 @@ pip install -r requirements.txt
 Bazı PDF'ler bozuk olabilir. `ingestion.py` hatalı dosyaları atlayıp devam eder.
 
 ### Çok büyük PDF'ler
-50 MB üzeri dosyalar otomatik atlanır. Limiti değiştirmek için `app/config.py` içindeki `MAX_FILE_SIZE_MB` değerini güncelleyin.
+50 MB üzeri dosyalar otomatik atlanır. Limiti değiştirmek için `ingestion.py` dosyasındaki `MAX_FILE_SIZE_MB = 50` değerini güncelleyin.
 
 ### Web araması çalışmıyor
 Tavily API anahtarınızı kontrol edin veya internet bağlantınızı test edin.

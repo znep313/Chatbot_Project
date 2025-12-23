@@ -24,8 +24,7 @@ def load_keywords(file_path="keywords.txt"):
     return keywords
 
 ALLOWED_KEYWORDS = load_keywords()
-chat_history = [] 
-print(os.getenv("GOOGLE_API_KEY"))
+chat_history = []
 # Modeller
 # Not: Hata alırsan gemini-1.5-flash veya gemini-pro deneyebilirsin
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.1)
@@ -73,7 +72,7 @@ while True:
         # Web aramasını daha spesifik hale getirmek için 'medical' ekliyoruz
         web_res = tavily.search(query=f"{user_input} medical allergy", search_depth="advanced")
         web_context = "\n".join([r['content'] for r in web_res['results']])
-    except: 
+    except Exception as e:
         web_context = "Web araması yapılamadı."
 
     # --- 4. KATMAN: CEVAP OLUŞTURMA ---

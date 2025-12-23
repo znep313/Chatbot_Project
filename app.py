@@ -421,7 +421,7 @@ def get_uploaded_files_list():
                     filename = os.path.basename(source) if source else "Bilinmeyen"
                     sources.add(filename)
         return sorted(list(sources))
-    except:
+    except Exception:
         return []
 
 def export_chat_history():
@@ -675,7 +675,7 @@ if prompt := st.chat_input("💬 Alerji hakkında bir soru sorun..."):
                     try:
                         web_res = tavily.search(query=f"{prompt} medical allergy analysis", search_depth="advanced")
                         web_context = "\n".join([r['content'] for r in web_res['results']])
-                    except:
+                    except Exception:
                         web_context = ""
                     
                     st.write("🧠 Cevap oluşturuluyor...")
