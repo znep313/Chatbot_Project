@@ -65,6 +65,35 @@
 
 ---
 
+## 🚀 Hızlı Başlangıç
+
+```bash
+# 1. Projeyi klonlayın
+git clone https://github.com/znep313/Chatbot_Project.git
+cd Chatbot_Project
+
+# 2. Sanal ortam oluşturun ve aktif edin
+python -m venv .venv
+.venv\Scripts\activate  # Windows
+# source .venv/bin/activate  # macOS/Linux
+
+# 3. Bağımlılıkları yükleyin
+pip install -r requirements.txt
+
+# 4. .env dosyası oluşturun
+copy .env.example .env  # Windows
+# cp .env.example .env  # macOS/Linux
+# .env dosyasını düzenleyip API anahtarlarınızı girin
+
+# 5. Veritabanını oluşturun
+python ingestion.py
+
+# 6. Uygulamayı başlatın
+streamlit run app.py
+```
+
+---
+
 ## Kurulum
 
 ### Gereksinimler
@@ -73,15 +102,11 @@
 - Google AI API Key
 - Tavily API Key (opsiyonel, web araması için)
 
-### Adım 1: Projeyi İndirin veya Klasöre Gidin
+### Adım 1: Projeyi İndirin
 
 ```bash
-# Eğer Git'ten indiriyorsanız:
-git clone https://github.com/kullanici/alerji-chatbot.git
-cd alerji-chatbot
-
-# Veya mevcut klasöre gidin:
-cd "Chatbot Project"
+git clone https://github.com/znep313/Chatbot_Project.git
+cd Chatbot_Project
 ```
 
 ### Adım 2: Sanal Ortam Oluşturun
@@ -106,20 +131,40 @@ pip install -r requirements.txt
 
 Proje dizininde `.env` dosyası oluşturun:
 
+**Yöntem 1:** `.env.example` dosyasını kopyalayın:
+```bash
+# Windows
+copy .env.example .env
+
+# macOS/Linux
+cp .env.example .env
+```
+
+**Yöntem 2:** Manuel olarak `.env` dosyası oluşturun:
 ```env
 GOOGLE_API_KEY=your_google_api_key_here
 TAVILY_API_KEY=your_tavily_api_key_here
 ```
 
 > **API Anahtarı Alma:**
-> - Google AI: [Google AI Studio](https://aistudio.google.com/apikey)
-> - Tavily: [Tavily Dashboard](https://tavily.com/)
+> - **Google AI** (Zorunlu): [Google AI Studio](https://aistudio.google.com/apikey) - Ücretsiz
+> - **Tavily** (Opsiyonel): [Tavily Dashboard](https://tavily.com/) - Web araması için
 
 ### Adım 5: Veritabanını Oluşturun
+
+**Önemli:** `data/` klasörüne PDF, CSV veya Excel dosyalarınızı ekleyin (opsiyonel).
 
 ```bash
 python ingestion.py
 ```
+
+Bu script:
+- `data/` klasöründeki PDF dosyalarını yükler
+- CSV/Excel dosyalarını işler
+- Web sitelerini tarar (ingestion.py içindeki URL_LIST'ten)
+- Tüm verileri ChromaDB'ye yazar
+
+**Not:** Eğer `data/` klasörü boşsa, sadece web siteleri taranır.
 
 ### Adım 6: Uygulamayı Başlatın
 
@@ -148,6 +193,7 @@ Tarayıcınızda `http://localhost:8501` adresine gidin.
 ├── 📄 keywords.txt              # Anahtar kelime listesi (filtreleme için)
 ├── 📄 requirements.txt          # Python bağımlılıkları
 ├── 📄 .gitignore                # Git ignore kuralları
+├── 📄 .env.example              # .env dosyası örneği (kopyalayıp .env yapın)
 ├── 📄 .env                      # API anahtarları (gizli - oluşturmanız gerekir)
 └── 📄 README.md                 # Bu dosya
 ```
