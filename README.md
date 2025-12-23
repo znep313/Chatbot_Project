@@ -214,6 +214,11 @@ Tarayıcınızda `http://localhost:8501` adresine gidin.
 ## Kullanım
 
 ### Web Arayüzü (Streamlit)
+<img width="1912" height="853" alt="Ekran görüntüsü 2025-12-22 145002" src="https://github.com/user-attachments/assets/f272fb1c-13d4-42cd-a05d-72af48c26ac2" />
+<img width="1910" height="845" alt="Ekran görüntüsü 2025-12-23 195655" src="https://github.com/user-attachments/assets/d588474e-efc1-46b5-ab52-82fe48967aec" />
+<img width="1382" height="470" alt="Ekran görüntüsü 2025-12-23 195720" src="https://github.com/user-attachments/assets/57d7eba5-cfed-4c5d-936a-4b7cabeae550" />
+<img width="308" height="855" alt="Ekran görüntüsü 2025-12-23 195745" src="https://github.com/user-attachments/assets/bfbcd5b5-799f-4fea-a992-2805a1e4176f" />
+
 
 ```bash
 streamlit run app.py
