@@ -175,11 +175,6 @@ streamlit run app.py
 Tarayıcınızda `http://localhost:8501` adresine gidin.
 
 ---
-Metrik,Kullanılan Teknoloji,Başarı & Hız Skoru
-🧠 Doğal Dil İşleme,Google Gemini 2.0 Flash,< 1.2sn Yanıt Süresi
-🔍 Vektörel Arama,ChromaDB + Text-004,%94+ Semantik İsabet
-🌐 Web Araştırma,Tavily Search API,Derinlemesine Tıbbi Tarama
-🎨 Kullanıcı Arayüzü,Streamlit,Responsive & Custom CSS
 
 ## Proje Yapısı
 
