@@ -17,7 +17,7 @@
 </div>
 
 ---
-###Geliştirici Bilgisi
+### Geliştirici Bilgisi
 Zeynep Bilge Kaya
 
 ## Özellikler
@@ -51,13 +51,12 @@ Zeynep Bilge Kaya
 - Modern ve şık UI tasarımı
 
 ---
-###Chatbot Akış Diyagramı
+### Chatbot Akış Diyagramı
                     ┌─────────────────┐
                     │  Kullanıcı Girdi │
                     └────────┬─────────┘
                              │
                              ▼
-                   
                     ┌─────────────────┐
                     │  Keyword Filtre  │
                     │  (Alerji/Sağlık) │
@@ -94,31 +93,31 @@ Zeynep Bilge Kaya
          │         └──────────────┘
          │
          ▼
-┌─────────────────────┐
-│  RAG SİSTEMİ        │
-│  ────────────────   │
-│  1. Yerel Dosyalar  │
-│     (ChromaDB)      │
-│  2. Web Araması     │
-│     (Tavily API)    │
-└─────────┬───────────┘
-          │
-          ▼
-┌─────────────────────┐
-│  LLM Cevap Oluştur  │
-│  (Gemini/GPT)       │
-└─────────┬───────────┘
-          │
-          ▼
-┌─────────────────────┐
-│  Kaynak Analizi     │
-│  (PDF/Web Oranı)    │
-└─────────┬───────────┘
-          │
-          ▼
-┌─────────────────────┐
-│  Kullanıcıya Göster  │
-└─────────────────────┘
+    ┌─────────────────────┐
+    │  RAG SİSTEMİ        │
+    │  ────────────────   │
+    │  1. Yerel Dosyalar  │
+    │     (ChromaDB)      │
+    │  2. Web Araması     │
+    │     (Tavily API)    │
+    └─────────┬───────────┘
+              │
+              ▼
+    ┌─────────────────────┐
+    │  LLM Cevap Oluştur  │
+    │  (Gemini/GPT)       │
+    └─────────┬───────────┘
+              │
+              ▼
+    ┌─────────────────────┐
+    │  Kaynak Analizi     │
+    │  (PDF/Web Oranı)    │
+    └─────────┬───────────┘
+              │
+              ▼
+    ┌─────────────────────┐
+    │  Kullanıcıya Göster │
+    └─────────────────────┘
 
 ## Teknolojiler
 
