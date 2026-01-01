@@ -14,7 +14,7 @@ def load_keywords(file_path="keywords.txt"):
         with open(file_path, "r", encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
-                # Boş satırları ve yorum satırlarını atla
+                
                 if line and not line.startswith("#"):
                     keywords.append(line.lower())
         print(f"✅ {len(keywords)} anahtar kelime yüklendi.")
@@ -26,7 +26,7 @@ def load_keywords(file_path="keywords.txt"):
 ALLOWED_KEYWORDS = load_keywords()
 chat_history = []
 # Modeller
-# Not: Hata alırsan gemini-1.5-flash veya gemini-pro deneyebilirsin
+
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.1)
 embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
 tavily = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
